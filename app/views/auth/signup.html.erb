@@ -1,0 +1,9 @@
+<%= form_tag("/auth/login_auth", method: "post") do %>
+<%= label_tag(:username, "UserName:") %>
+<%= text_field_tag(:username) %>
+<%= label_tag(:password, "Password:") %>
+<%= text_field_tag(:password) %>
+<%=submit_tag("Signup") %>
+<% end %>
+
+<a href="<%= auth_login_path%>"><h1> new user </h1> </a>
