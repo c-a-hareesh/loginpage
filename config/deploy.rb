@@ -1,8 +1,8 @@
 # config valid for current version and patch releases of Capistrano
-lock "~> 3.11.2"
+#lock "~> 3.11.2"
 
-set :application, "my_app_name"
-set :repo_url, "git@example.com:me/my_repo.git"
+#set :application, "loginpage"
+#set :repo_url, "git@github.com:c-a-hareesh/loginpage.git"
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
@@ -39,27 +39,27 @@ set :repo_url, "git@example.com:me/my_repo.git"
 # config valid only for current version of Capistrano
 lock '3.11.2'
 
-set :repo_url, 'git@github.com:c-a-hareesh/loginpage.git'
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
 
-set :user, 'deployer'
-set :application, 'loginpage'
-set :rails_env, 'production'
-server '100.24.69.149', user: "#{fetch(:user)}", roles: %w{app db web}, primary: true
-set :deploy_to,       "/home/#{fetch(:user)}/apps/#{fetch(:application)}"
-set :pty, true
+set :application, "loginpage"
+set :repo_url, "git@github.com:c-a-hareesh/loginpage.git"
 
-set :linked_files, fetch(:linked_files, []).push('config/database.yml', 'config/secrets.yml', 'config/puma.rb')
-set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', 'public/system', 'public/uploads')
+# Deploy to the user's home directory
+set :deploy_to, "/home/deploy/#{fetch :application}"
 
-set :config_example_suffix, '.example'
-set :config_files, %w{config/database.yml config/secrets.yml}
-set :puma_conf, "#{shared_path}/config/puma.rb"
+append :linked_dirs, 'log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', '.bundle', 'public/system', 'public/uploads'
+
+# Only keep the last 5 releases to save disk space
+set :keep_releases, 5
+
+# Optionally, you can symlink your database.yml and/or secrets.yml file from the shared directory during deploy
+# This is useful if you don't want to use ENV variables
+# append :linked_files, 'config/database.yml', 'config/secrets.yml'
 
 namespace :deploy do
-  before 'check:linked_files', 'config:push'
-  before 'check:linked_files', 'puma:config'
-  before 'check:linked_files', 'puma:nginx_config'
-  before 'deploy:migrate', 'deploy:db:create'
-  after 'puma:smart_restart', 'nginx:restart'
+ before 'check:linked_files', 'config:push'
+ # before 'check:linked_files', 'puma:config'
+ # before 'check:linked_files', 'puma:nginx_config'
+ # before 'deploy:migrate', 'deploy:db:create'
+ # after 'puma:smart_restart', 'nginx:restart'
 end
